@@ -5,7 +5,9 @@ neo4j
 streamlit
 Pillow
 fastapi
+pdf2image==1.17.0
 PyPDF2
+pytesseract
 pydantic
 uvicorn
 sse-starlette
