@@ -165,29 +165,6 @@ def main():
                 if document not in st.session_state.documents:
                     st.session_state.documents.append(document)
 
-    # if any(uploaded_files):
-    #     for uploaded_file, document in zip(uploaded_files, documents_list):
-    #         agents[document] = RAG_document_validator_and_text_extractor(document, uploaded_file)
-        
-    #     st.write(
-    #         f"""
-    #         A IA vai revisar os documentos para extrair e validar as informações presentes.
-    #         """
-    #     )
-        
-    #     stream_handler = StreamHandler(st.empty())
-
-    #     for document in documents_list:
-    #         if document not in st.session_state.document:
-    #             # Accept user questions/query
-    #             query = prompts[document].get('latest')['input'] # st.text_input()
-    #             agent = agents.get(document, None)
-    #             if query and agent:
-    #                 st.session_state.document.append(document)
-    #                 answer = agent.invoke({'input': query})['answer']
-                    
-    #                 for token in answer:
-    #                     stream_handler.on_llm_new_token(token=token)
 
 if __name__ == "__main__":
     main()
