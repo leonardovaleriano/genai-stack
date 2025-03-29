@@ -9,6 +9,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 RUN apt-get update && apt-get install -y \
+    poppler-utils \
     tesseract-ocr \
     libtesseract-dev \
     tesseract-ocr-por
@@ -18,6 +19,7 @@ COPY requirements.txt .
 RUN pip install --upgrade -r requirements.txt
 
 COPY multiple_files_bot.py .
+COPY prompts.json .
 COPY utils.py .
 COPY chains.py .
 
