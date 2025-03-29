@@ -1,0 +1,44 @@
+{
+    "CNH": {
+        "v1": "Extraia do documento CNH os dados nos campos: Nome completo, nacionalidade, data de nascimento, RG e órgão expedidor e CPF.",
+
+        "v2": "Extraia do documento CNH os dados nos campos: Nome completo (1º Nome encontrado), nacionalidade, data de nascimento, RG com órgão expedidor e CPF (localizado após o RG).",
+
+        "v3": "Extraia do documento CNH os dados nos campos: Nome completo (1º Nome encontrado), nacionalidade (faça inferência, se necessário), data de nascimento, RG com órgão expedidor e CPF (11 dígitos, localizado após o RG). Informe se a data de vencimento é maior que a data atual: 25/02/2025 (em caso negativo, retorne DOCUMENTO INVÁLIDO).",
+
+        "v4": "Extraia do documento CNH os dados nos campos (alguns campos podem possuir escrita parecida com os dados a seguir, tente buscar campo com nome parecido): Nome completo (1º Nome encontrado), nacionalidade (faça inferência, se necessário), data de nascimento, RG com órgão expedidor e CPF (11 dígitos, localizado após o RG). Informe se a data de validade é maior que a data atual: 25/02/2025 (em caso negativo, retorne DOCUMENTO INVÁLIDO).",
+        
+        "latest": {
+            "prompt": "You are an assistant for question-answering tasks. Always answer in Portuguese (Brasil). Retrieve information from Context where the token 'NOME_DO_DOCUMENTO' contains 'CNH'. Always return a structured table consolidating the information in the end of the answer.",
+            "input": "Extraia os dados nos campos: Nome completo (1º Nome encontrado), nacionalidade (faça inferência, se necessário), data de nascimento, RG com órgão expedidor e CPF (11 dígitos separados por '.' e '-', localizado após o RG). Informe se a data de validade é maior que a data atual: 25/02/2025 (em caso negativo, retorne DOCUMENTO INVÁLIDO)."
+        },
+    
+        "resposta": "Nome Completo: MARLI SILVA DE ANDRADE; Nacionalidade: Brasileira (inferente do órgão emitente); Data de Nascimento: 19/08/1968; RG com Órgão Expedidor: 3198072 - SSP PE; CPF: Não localizado na informação fornecida; Validade do Documento: Até 29/04/2026. Como esta data está após 25/02/2025, o documento é válido."
+    },
+
+    "Comprovante de Residência": {
+        "v1": "Extraia do documento 'Comprovante de Residência' os dados relacionados a endereço e CEP (Caixa Postal/ZIP Code).",
+
+        "latest": {
+            "prompt":"You are an assistant for question-answering tasks. Always answer in Portuguese (Brasil). Retrieve information from Context where the token 'NOME_DO_DOCUMENTO' contains 'Comprovante de Residência'. Always return a structured table consolidating the information in the end of the answer.",
+            "input": "Extraia os dados relacionados a endereço e CEP (Caixa Postal/ZIP Code). Apresente essas informações por extenso sem as abreviações de avenida, rua e apartamento/lote. Verifique se a data de envio do documento possui até 30 dias de diferença da data atual: 25/02/2025 (em caso negativo, retorne DOCUMENTO INVÁLIDO)." 
+        },
+
+        "resposta": "Nome: WILSON PEREIRA DE LIMA; Endereço: Rua Setubal, 1245 - Apartamento 1402; CEP (Caixa Postal): 51130-010; Localização: Recife - PE."
+    },
+
+    "Certidão de Casamento": {
+        "v1": "Extraia do documento 'Certidão de Casamento' os dados relacionados ao Cônjuge: Nome, Documento de Identificação e Data do Casamento. Extrair o dado sobre o tipo de Regime de Bens.",
+
+        "v2": "Extraia do documento 'Certidão de Casamento' os dados relacionados ao Cônjuge: Nome, Documento de Identificação e Data do Casamento. Extrair o dado sobre o tipo de Regime de Bens e extrair os dados de registro da certidão e onde a certidão foi emitida.",
+
+        "v3": "Extraia do documento 'Certidão de Casamento' os dados relacionados ao Cônjuge: Nome, Documento de Identificação e Data do Casamento. Extrair o dado sobre o tipo de Regime de Bens. Extrair o número de registro da certidão, onde a certidão foi emitida e a data de emissão da Certidão.",
+
+        "v4": "Extraia do documento 'Certidão de Casamento' os dados relacionados ao Cônjuge: Nome, Documento de Identificação e Data do Casamento. Extrair o dado sobre o tipo de Regime de Bens. Extrair o número de registro da certidão, onde a certidão foi emitida e a data de emissão da Certidão.",
+
+        "latest": {
+            "prompt": "You are an assistant for question-answering tasks. Always answer in Portuguese (Brazil) and return a structured table consolidating the information at the end of the answer. Retrieve information from Context where the token 'NOME_DO_DOCUMENTO' contains 'Certidão de Casamento'.",
+            "input": "Extraia dados relacionados ao Cônjuge: Nome, Documento de Identificação e Data do Casamento. Extrair o dado sobre o tipo de Regime de Bens. Extrair o número de registro da certidão, onde a certidão foi emitida e a data de emissão da Certidão."
+        }
+    }
+}
