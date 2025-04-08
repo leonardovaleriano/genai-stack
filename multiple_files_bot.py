@@ -59,7 +59,48 @@ class StreamHandler(BaseCallbackHandler):
         self.container.markdown(self.text)
 
 
-def RAG_document_validator_and_text_extractor(document_name: str, uploaded_file):
+def RAG_Minuta(document_name: str, uploaded_file):
+    text = ""
+    if uploaded_file:
+        bytes_data = uploaded_file.read()
+        file_format = uploaded_file.name.split('.')[1].lower()
+        
+        match file_format:
+            case 'pdf':
+                images = convert_from_bytes(bytes_data)
+                # Somente a 1ª página
+                text += pytesseract.image_to_string(images[0], lang='por') + " \n\n"
+
+                # for i, image in enumerate(images):
+                #     text += f"Página: {i} \n\n" + pytesseract.image_to_string(image, lang='por')
+            case _:
+                st.write("Formato do arquivo:", uploaded_file.name, "não é suportado!")
+
+        # langchain_textspliter
+        text_splitter = RecursiveCharacterTextSplitter(
+                            chunk_size=10000,
+                            chunk_overlap=200,
+                            length_function=len, 
+                            separators=['\n\n', '\n']
+                        )
+        chunks = text_splitter.split_text(text=text)
+        chunks = [f"NOME_DO_DOCUMENTO: {document_name} " + chunk for chunk in chunks]
+
+        # Store the chuncks part in db (vector)
+        vectorstore = Neo4jVector.from_texts(
+            chunks,
+            url=url,
+            username=username,
+            password=password,
+            embedding=embeddings,
+            node_label=f"MultipleFilesBotChunk_{document_name}",
+            pre_delete_collection=True, # Delete existing data in collection
+        )
+
+        return vectorstore
+
+
+def RAG_agent_document_validator(document_name: str, uploaded_file):
     text = ""
     if uploaded_file:
         bytes_data = uploaded_file.read()
@@ -102,32 +143,36 @@ def RAG_document_validator_and_text_extractor(document_name: str, uploaded_file)
             pre_delete_collection=True, # Delete existing data in collection
         )
 
-        system_prompt = prompts[document_name].get('latest')['prompt'] + " Context: {context}"
-        prompt = ChatPromptTemplate(
+        agent_document_retreiver = build_RAG_agent(document_name, vectorstore)
+
+        return agent_document_retreiver
+
+
+def build_RAG_agent(document_name, vectorstore, prompt=None, history_context=""):
+    if not prompt:
+        prompt = prompts[document_name].get('latest')['prompt']
+
+    system_prompt = prompt + " Context: {context} " + history_context + " "
+    prompt = ChatPromptTemplate(
             [
                 ("system", system_prompt),
                 ("human", "{input}")
             ]
         )
-        qa_chain = create_stuff_documents_chain(llm, prompt)
-        agent_document_retreiver = create_retrieval_chain(vectorstore.as_retriever(), qa_chain)
+    qa_chain = create_stuff_documents_chain(llm, prompt)
+    agent_document_retreiver = create_retrieval_chain(vectorstore.as_retriever(), qa_chain)
+    return agent_document_retreiver
 
-        # agent_document_retreiver = RetrievalQA.from_chain_type(
-        #     llm=llm, 
-        #     chain_type="stuff", 
-        #     retriever=vectorstore.as_retriever(), 
-        #     prompt=prompt
-        # )
 
-        return agent_document_retreiver
-        
 agents = dict()
 documents_list = ['CNH', 'Comprovante de Residência', 'Certidão de Casamento']
 if 'documents' not in st.session_state:
     st.session_state.documents = []
 
 def main():
-    st.header("📄 Revise os documentos apresentados para a Escritura")
+    st.title("📄 StartLegal - Agente Revisor de Minutas")
+
+    st.subheader("Anexe a minuta de uma escritura e em seguida os documentos necessários para revisão.")
 
     with st.sidebar:
         st.title("Partes Envolvidas")
@@ -140,31 +185,72 @@ def main():
         st.subheader("Parte Vendedora")
         st.text("Documentos apresentados...")
 
-    tabs = st.tabs(documents_list)
+     # upload a your files
+    uploaded_file_minuta = st.file_uploader(
+        "Suba o documento da Minuta em formato PDF.", 
+        accept_multiple_files=False,
+        type="pdf",
+        key='minuta'
+    )
 
-    for tab, document in zip(tabs, documents_list):
-        with tab:
-            # upload a your files
-            uploaded_file = st.file_uploader(
-                "Suba o documento em algum desses formatos: PDF, png, jpeg, ou txt.", 
-                accept_multiple_files=False,
-                type=["png", "jpg", "jpeg", "pdf", "txt"],
-                key=document
-            )
+    if uploaded_file_minuta:
+        if not st.session_state.get('rag_minuta', False):   
+            st.write("A IA irá coletar as informações presentes no documento...")
+            
+            minuta_vector_db = RAG_Minuta('Minuta', uploaded_file_minuta)
+            if 'rag_minuta' not in st.session_state:
+                st.session_state['rag_minuta'] = True
+                st.session_state.minuta_db = minuta_vector_db
 
-            if uploaded_file:
-                st.write("A IA irá coletar e validar as informações presentes...")
+                # Print a table with Minuta information
+                if 'minuta_db' in st.session_state:
+                    minuta_system = prompts['Minuta Comprador'].get('latest').get('prompt_minuta', None)
+                    minuta_agent = build_RAG_agent('Minuta', st.session_state.minuta_db, minuta_system) # " gere uma tabela juntando a coluna 'Valor' das tabelas existentes."
+                    
+                    query = prompts['Minuta Comprador'].get('latest')['input_minuta']
+                    minuta_response = minuta_agent.invoke({'input': query })
+                    answer = minuta_response['answer']
+                    st.session_state.minuta_comprador = answer
 
-                # Text extraction and embedding using OCR and LLM to build a QA RAG
-                query = prompts[document].get('latest')['input']
-                agent = RAG_document_validator_and_text_extractor(document, uploaded_file)
-                answer = agent.invoke({'input': query})['answer']
-                stream_handler = StreamHandler(st.empty())
-                for token in answer:
-                    stream_handler.on_llm_new_token(token=token)
-                if document not in st.session_state.documents:
-                    st.session_state.documents.append(document)
+                    minuta_system = prompts['Minuta Vendedor'].get('latest').get('prompt_minuta', None)
+                    minuta_agent = build_RAG_agent('Minuta', st.session_state.minuta_db, minuta_system) # " gere uma tabela juntando a coluna 'Valor' das tabelas existentes."
+                    
+                    query = prompts['Minuta Vendedor'].get('latest')['input_minuta']
+                    minuta_response = minuta_agent.invoke({'input': query })
+                    answer = minuta_response['answer']
+                    st.session_state.minuta_vendedor = answer
 
+    # Activate tabs after Minuta has been processed...
+    if st.session_state.minuta:
+        tabs = st.tabs(documents_list)
+
+        for tab, document in zip(tabs, documents_list):
+            with tab:
+                # upload a your files
+                uploaded_file = st.file_uploader(
+                    "Suba o documento em algum desses formatos: PDF, png, jpeg, ou txt.", 
+                    accept_multiple_files=False,
+                    type=["png", "jpg", "jpeg", "pdf", "txt"],
+                    key=document
+                )
+
+                if uploaded_file:
+                    st.write("A IA irá coletar e validar as informações presentes...")
+
+                    # Text extraction and embedding using OCR and LLM to build a QA RAG
+                    query = prompts[document].get('latest')['input']
+                    agent = RAG_agent_document_validator(document, uploaded_file)
+                    answer = agent.invoke({'input': query})['answer']
+
+                    stream_handler = StreamHandler(st.empty())
+                    for token in answer:
+                        stream_handler.on_llm_new_token(token=token)
+                    
+                    st.write("Dados da Minuta (parte compradora)")
+
+                    stream_handler = StreamHandler(st.empty())
+                    for token in st.session_state.minuta_comprador:
+                        stream_handler.on_llm_new_token(token=token)
 
 if __name__ == "__main__":
     main()
