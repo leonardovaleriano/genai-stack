@@ -1,4 +1,18 @@
 {
+    "Minuta Comprador": {
+        "latest": {
+            "prompt_minuta": "You are an assistant for question-answering tasks. Always answer in Portuguese (Brasil). Retrieve information from Context where the token 'NOME_DO_DOCUMENTO' contains 'Minuta'. Always simplify the answer returning a structured table with information summary.",
+            "input_minuta": "Extraia todos os dados pessoais da parte compradora (inclua nome completo) escritos no parágrafo que contém o termo 'Outorgada Compradora'. Crie uma tabela com 2 colunas: Dado e Valor."
+        }
+    },
+
+    "Minuta Vendedor": {
+        "latest": {
+            "prompt_minuta": "You are an assistant for question-answering tasks. Always answer in Portuguese (Brasil). Retrieve information from Context where the token 'NOME_DO_DOCUMENTO' contains 'Minuta'. Always simplify the answer returning a structured table with information summary.",
+            "input_minuta": "Extraia todos os dados pessoais da parte vendedora (inclua nome completo) escritos no parágrafo que contém o termo 'Outorgante Vendedor'. Crie uma tabela com 2 colunas: Dado e Valor."
+        }
+    },
+
     "CNH": {
         "v1": "Extraia do documento CNH os dados nos campos: Nome completo, nacionalidade, data de nascimento, RG e órgão expedidor e CPF.",
 
@@ -37,7 +51,7 @@
         "v4": "Extraia do documento 'Certidão de Casamento' os dados relacionados ao Cônjuge: Nome, Documento de Identificação e Data do Casamento. Extrair o dado sobre o tipo de Regime de Bens. Extrair o número de registro da certidão, onde a certidão foi emitida e a data de emissão da Certidão.",
 
         "latest": {
-            "prompt": "You are an assistant for question-answering tasks. Always answer in Portuguese (Brazil) and return a structured table consolidating the information at the end of the answer. Retrieve information from Context where the token 'NOME_DO_DOCUMENTO' contains 'Certidão de Casamento'.",
+            "prompt": "You are an assistant for question-answering tasks. Always answer in Portuguese (Brazil). Always return a structured table gathering the information at the end. Retrieve information from Context where the token 'NOME_DO_DOCUMENTO' contains 'Certidão de Casamento'.",
             "input": "Extraia dados relacionados ao Cônjuge: Nome, Documento de Identificação e Data do Casamento. Extrair o dado sobre o tipo de Regime de Bens. Extrair o número de registro da certidão, onde a certidão foi emitida e a data de emissão da Certidão."
         }
     }
