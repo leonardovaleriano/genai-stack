@@ -18,7 +18,8 @@ COPY requirements.txt .
 
 RUN pip install --upgrade -r requirements.txt
 
-COPY multiple_files_bot.py .
+ADD pages pages
+COPY StartLegal.py .
 COPY prompts.json .
 COPY utils.py .
 COPY chains.py .
@@ -27,4 +28,4 @@ EXPOSE 8505
 
 HEALTHCHECK CMD curl --fail http://localhost:8503/_stcore/health
 
-ENTRYPOINT ["streamlit", "run", "multiple_files_bot.py", "--server.port=8505", "--server.address=0.0.0.0"]
+ENTRYPOINT ["streamlit", "run", "StartLegal.py", "--server.port=8505", "--server.address=0.0.0.0"]
