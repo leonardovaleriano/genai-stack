@@ -18,7 +18,9 @@ COPY requirements.txt .
 
 RUN pip install --upgrade -r requirements.txt
 
+ADD rag_utils rag_utils
 ADD pages pages
+COPY __init__.py .
 COPY StartLegal.py .
 COPY prompts.json .
 COPY utils.py .

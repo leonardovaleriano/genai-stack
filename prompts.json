@@ -2,7 +2,7 @@
     "Minuta Comprador": {
         "latest": {
             "prompt_minuta": "You are an assistant for question-answering tasks. Always answer in Portuguese (Brasil). Retrieve information from Context where the token 'NOME_DO_DOCUMENTO' contains 'Minuta'. Always simplify the answer returning a structured table with information summary.",
-            "input_minuta": "Extraia todos os dados pessoais da parte compradora (inclua nome completo) escritos no parágrafo que contém o termo 'Outorgada Compradora'. Crie uma tabela com 2 colunas: Dado e Valor."
+            "input_minuta": "Extraia todos os dados pessoais (inclua nome completo) e de endereço da parte compradora. Esses dados estão escritos no parágrafo que contém o termo 'Outorgada Compradora'. Crie uma tabela com 2 colunas: Dado e Valor."
         }
     },
 
@@ -35,7 +35,7 @@
 
         "latest": {
             "prompt":"You are an assistant for question-answering tasks. Always answer in Portuguese (Brasil). Retrieve information from Context where the token 'NOME_DO_DOCUMENTO' contains 'Comprovante de Residência'. Always return a structured table consolidating the information in the end of the answer.",
-            "input": "Extraia os dados relacionados a endereço e CEP (Caixa Postal/ZIP Code). Apresente essas informações por extenso sem as abreviações de avenida, rua e apartamento/lote. Verifique se a data de envio do documento possui até 30 dias de diferença da data atual: 25/02/2025 (em caso negativo, retorne DOCUMENTO INVÁLIDO)." 
+            "input": "Extraia os dados relacionados a endereço e CEP (Caixa Postal/ZIP Code). Gere uma tabela as informações a seguir (por linha): endereço, cidade, estado, país. Verifique se a data de envio do documento possui até 30 dias de diferença da data atual: 25/02/2025 (em caso negativo, retorne DOCUMENTO INVÁLIDO)." 
         },
 
         "resposta": "Nome: WILSON PEREIRA DE LIMA; Endereço: Rua Setubal, 1245 - Apartamento 1402; CEP (Caixa Postal): 51130-010; Localização: Recife - PE."
