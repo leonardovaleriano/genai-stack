@@ -24,7 +24,7 @@ def document_encoder_retriever(
     ocr_lang = ocr_params.get('lang', None)
     
     if uploaded_file:
-        bytes_data = uploaded_file.read()
+        bytes_data = uploaded_file.getvalue()
         file_format = uploaded_file.name.split('.')[1].lower()
         
         # Extract text from document
