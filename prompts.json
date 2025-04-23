@@ -1,58 +1,100 @@
 {
     "Minuta Comprador": {
         "latest": {
-            "prompt_minuta": "You are an assistant for question-answering tasks. Always answer in Portuguese (Brasil). Retrieve information from Context where the token 'NOME_DO_DOCUMENTO' contains 'Minuta'. Always simplify the answer returning a structured table with information summary.",
-            "input_minuta": "Extraia todos os dados pessoais (inclua nome completo) e de endereço da parte compradora. Esses dados estão escritos no parágrafo que contém o termo 'Outorgada Compradora'. Crie uma tabela com 2 colunas: Dado e Valor."
+            "prompt": "You are an assistant for question-answering tasks. Always answer in Portuguese (Brasil). Retrieve information from Context where the token 'NOME_DO_DOCUMENTO' contains 'Minuta Comprador'. Return all the text from the paragraph where the term 'Outorgada Compradora' exists and put tags <begin><end> to mark the text. The user will require data from this text, always return a structured table with that data.",
+            "input": "Extraia os dados da parte compradora e cônjuge referentes a: identificação e outros documentos pessoais apresentados, profissão, estado civil, regime de separação de bens (se casado ou união estável), cartório de notas e número de registro do Pacto Antenupcial ou União Estável (se declarado), e endereço de residência. Estruture esses dados em uma tabela com título 'Minuta Dados da Parte Compradora'."
         }
     },
-
     "Minuta Vendedor": {
         "latest": {
-            "prompt_minuta": "You are an assistant for question-answering tasks. Always answer in Portuguese (Brasil). Retrieve information from Context where the token 'NOME_DO_DOCUMENTO' contains 'Minuta'. Always simplify the answer returning a structured table with information summary.",
-            "input_minuta": "Extraia todos os dados pessoais da parte vendedora (inclua nome completo) escritos no parágrafo que contém o termo 'Outorgante Vendedor'. Crie uma tabela com 2 colunas: Dado e Valor."
+            "prompt": "You are an assistant for question-answering tasks. Always answer in Portuguese (Brasil). Retrieve information from Context where the token 'NOME_DO_DOCUMENTO' contains 'Minuta Vendedor'. Return all the text from the paragraph where the term 'Outorgante Vendedora' exists and put tags <begin><end> to mark the text. The user will require data from this text, always return a structured table with that data.",
+            "input": "Extraia os dados da parte vendedora e cônjuge referentes a: identificação e outros documentos pessoais apresentados, profissão, estado civil, regime de separação de bens (se casado ou união estável), cartório de notas e número de registro do Pacto Antenupcial ou União Estável (se declarado), e endereço de residência. Estruture esses dados em uma tabela com título 'Minuta Dados da Parte Vendedora'."
+
         }
     },
-
-    "CNH": {
-        "v1": "Extraia do documento CNH os dados nos campos: Nome completo, nacionalidade, data de nascimento, RG e órgão expedidor e CPF.",
-
-        "v2": "Extraia do documento CNH os dados nos campos: Nome completo (1º Nome encontrado), nacionalidade, data de nascimento, RG com órgão expedidor e CPF (localizado após o RG).",
-
-        "v3": "Extraia do documento CNH os dados nos campos: Nome completo (1º Nome encontrado), nacionalidade (faça inferência, se necessário), data de nascimento, RG com órgão expedidor e CPF (11 dígitos, localizado após o RG). Informe se a data de vencimento é maior que a data atual: 25/02/2025 (em caso negativo, retorne DOCUMENTO INVÁLIDO).",
-
-        "v4": "Extraia do documento CNH os dados nos campos (alguns campos podem possuir escrita parecida com os dados a seguir, tente buscar campo com nome parecido): Nome completo (1º Nome encontrado), nacionalidade (faça inferência, se necessário), data de nascimento, RG com órgão expedidor e CPF (11 dígitos, localizado após o RG). Informe se a data de validade é maior que a data atual: 25/02/2025 (em caso negativo, retorne DOCUMENTO INVÁLIDO).",
-        
+    "Minuta Imóvel": {
         "latest": {
-            "prompt": "You are an assistant for question-answering tasks. Always answer in Portuguese (Brasil). Retrieve information from Context where the token 'NOME_DO_DOCUMENTO' contains 'CNH'. Always return a structured table consolidating the information in the end of the answer.",
-            "input": "Extraia os dados nos campos: Nome completo (1º Nome encontrado), nacionalidade (faça inferência, se necessário), data de nascimento, RG com órgão expedidor e CPF (11 dígitos separados por '.' e '-', localizado após o RG). Informe se a data de validade é maior que a data atual: 25/02/2025 (em caso negativo, retorne DOCUMENTO INVÁLIDO)."
+            "prompt": "You are an assistant for question-answering tasks. Always answer in Portuguese (Brasil). Retrieve information from Context where the token 'NOME_DO_DOCUMENTO' contains 'Minuta Imóvel'. Return all the text from the paragraph where the term 'Cláusula 1a' exists and put tags <begin><end> to mark the text. The user will require data from this text, always return a structured table with that data.",
+            "input": "Extraia todas as informações acerca do imóvel: nome completo do proprietário, descrição do imóvel, logradouro, número, bairro e município, identificação de lote ou quadra, natureza do terreno (se pertence às forças armadas), características de cômodos, dimensões de tamanho e localização do imóvel, número de matrícula do imóvel e cartório que registrou a matrícula. Retorne uma tabela com título 'Dados do Imóvel' com essas informações."
+        }
+    },
+    "CNH Comprador": {
+        "v1": "Extraia do documento CNH os dados nos campos: Nome completo, nacionalidade, data de nascimento, RG e órgão expedidor e CPF.",
+        "v2": "Extraia do documento CNH os dados nos campos: Nome completo (1º Nome encontrado), nacionalidade, data de nascimento, RG com órgão expedidor e CPF (localizado após o RG).",
+        "v3": "Extraia do documento CNH os dados nos campos: Nome completo (1º Nome encontrado), nacionalidade (faça inferência, se necessário), data de nascimento, RG com órgão expedidor e CPF (11 dígitos, localizado após o RG). Informe se a data de vencimento é maior que a data atual: 25/02/2025 (em caso negativo, retorne DOCUMENTO INVÁLIDO).",
+        "v4": "Extraia do documento CNH os dados nos campos (alguns campos podem possuir escrita parecida com os dados a seguir, tente buscar campo com nome parecido): Nome completo (1º Nome encontrado), nacionalidade (faça inferência, se necessário), data de nascimento, RG com órgão expedidor e CPF (11 dígitos, localizado após o RG). Informe se a data de validade é maior que a data atual: 25/02/2025 (em caso negativo, retorne DOCUMENTO INVÁLIDO).",
+        "latest": {
+            "prompt": "You are an assistant for question-answering tasks. Always answer in Portuguese (Brasil). Retrieve information from Context where the token 'NOME_DO_DOCUMENTO' contains 'CNH Comprador'. Always return a structured table consolidating the information in the end of the answer.",
+            "input": "Extraia os dados nos campos: Nome completo (1º Nome encontrado), nacionalidade (infira, se necessário e não declare ao usuário que foi inferido), data de nascimento, RG com órgão expedidor e CPF (11 dígitos separados por '.' e '-', localizado após o RG) remova '.', '-' e '/' dos valores. Retorne uma tabela com título 'Dados do CNH do Comprador' com essas informações."
         },
-    
         "resposta": "Nome Completo: MARLI SILVA DE ANDRADE; Nacionalidade: Brasileira (inferente do órgão emitente); Data de Nascimento: 19/08/1968; RG com Órgão Expedidor: 3198072 - SSP PE; CPF: Não localizado na informação fornecida; Validade do Documento: Até 29/04/2026. Como esta data está após 25/02/2025, o documento é válido."
     },
-
-    "Comprovante de Residência": {
-        "v1": "Extraia do documento 'Comprovante de Residência' os dados relacionados a endereço e CEP (Caixa Postal/ZIP Code).",
-
+    "CNH Vendedor": {
+        "v1": "Extraia do documento CNH os dados nos campos: Nome completo, nacionalidade, data de nascimento, RG e órgão expedidor e CPF.",
+        "v2": "Extraia do documento CNH os dados nos campos: Nome completo (1º Nome encontrado), nacionalidade, data de nascimento, RG com órgão expedidor e CPF (localizado após o RG).",
+        "v3": "Extraia do documento CNH os dados nos campos: Nome completo (1º Nome encontrado), nacionalidade (faça inferência, se necessário), data de nascimento, RG com órgão expedidor e CPF (11 dígitos, localizado após o RG). Informe se a data de vencimento é maior que a data atual: 25/02/2025 (em caso negativo, retorne DOCUMENTO INVÁLIDO).",
+        "v4": "Extraia do documento CNH os dados nos campos (alguns campos podem possuir escrita parecida com os dados a seguir, tente buscar campo com nome parecido): Nome completo (1º Nome encontrado), nacionalidade (faça inferência, se necessário), data de nascimento, RG com órgão expedidor e CPF (11 dígitos, localizado após o RG). Informe se a data de validade é maior que a data atual: 25/02/2025 (em caso negativo, retorne DOCUMENTO INVÁLIDO).",
         "latest": {
-            "prompt":"You are an assistant for question-answering tasks. Always answer in Portuguese (Brasil). Retrieve information from Context where the token 'NOME_DO_DOCUMENTO' contains 'Comprovante de Residência'. Always return a structured table consolidating the information in the end of the answer.",
-            "input": "Extraia os dados relacionados a endereço e CEP (Caixa Postal/ZIP Code). Gere uma tabela as informações a seguir (por linha): endereço, cidade, estado, país. Verifique se a data de envio do documento possui até 30 dias de diferença da data atual: 25/02/2025 (em caso negativo, retorne DOCUMENTO INVÁLIDO)." 
-        },
-
-        "resposta": "Nome: WILSON PEREIRA DE LIMA; Endereço: Rua Setubal, 1245 - Apartamento 1402; CEP (Caixa Postal): 51130-010; Localização: Recife - PE."
+            "prompt": "You are an assistant for question-answering tasks. Always answer in Portuguese (Brasil). Retrieve information from Context where the token 'NOME_DO_DOCUMENTO' contains 'CNH Vendedor'. Always return a structured table consolidating the information in the end of the answer.",
+            "input": "Extraia os dados nos campos: Nome completo (1º Nome encontrado), nacionalidade (infira, se necessário e não declare ao usuário que foi inferido), data de nascimento, RG com órgão expedidor e CPF (11 dígitos separados por '.' e '-', localizado após o RG) remova '.', '-' e '/' dos valores. Retorne uma tabela com título 'Dados do CNH do Vendedor' com essas informações."
+        }
     },
-
-    "Certidão de Casamento": {
-        "v1": "Extraia do documento 'Certidão de Casamento' os dados relacionados ao Cônjuge: Nome, Documento de Identificação e Data do Casamento. Extrair o dado sobre o tipo de Regime de Bens.",
-
-        "v2": "Extraia do documento 'Certidão de Casamento' os dados relacionados ao Cônjuge: Nome, Documento de Identificação e Data do Casamento. Extrair o dado sobre o tipo de Regime de Bens e extrair os dados de registro da certidão e onde a certidão foi emitida.",
-
-        "v3": "Extraia do documento 'Certidão de Casamento' os dados relacionados ao Cônjuge: Nome, Documento de Identificação e Data do Casamento. Extrair o dado sobre o tipo de Regime de Bens. Extrair o número de registro da certidão, onde a certidão foi emitida e a data de emissão da Certidão.",
-
-        "v4": "Extraia do documento 'Certidão de Casamento' os dados relacionados ao Cônjuge: Nome, Documento de Identificação e Data do Casamento. Extrair o dado sobre o tipo de Regime de Bens. Extrair o número de registro da certidão, onde a certidão foi emitida e a data de emissão da Certidão.",
-
+    "Quitação ITBI": {
         "latest": {
-            "prompt": "You are an assistant for question-answering tasks. Always answer in Portuguese (Brazil). Always return a structured table gathering the information at the end. Retrieve information from Context where the token 'NOME_DO_DOCUMENTO' contains 'Certidão de Casamento'.",
-            "input": "Extraia dados relacionados ao Cônjuge: Nome, Documento de Identificação e Data do Casamento. Extrair o dado sobre o tipo de Regime de Bens. Extrair o número de registro da certidão, onde a certidão foi emitida e a data de emissão da Certidão."
+            "prompt": "You are an assistant for question-answering tasks. Always answer in Portuguese (Brasil). Retrieve information from Context where the token 'NOME_DO_DOCUMENTO' contains 'Quitação ITBI'. Always return a structured table consolidating the information in the end of the answer.",
+            "input": "Extraia a Inscrição e/ou sequencial do imóvel na Prefeitura onde está o imóvel, nome completo da pessoa no documento e valor financeiro presente. Retorne uma tabela com título 'Dados do Comprovante de ITBI' com essas informações."
+        }
+    },
+    "Matrícula do Imóvel": {
+        "latest": {
+            "prompt": "You are an assistant for question-answering tasks. Always answer in Portuguese (Brasil). Retrieve information from Context where the token 'NOME_DO_DOCUMENTO' contains 'Matrícula do Imóvel'. Always return a structured table consolidating the information in the end of the answer.",
+            "input": "Extraia todas as informações acerca do imóvel: nome completo do proprietário, descrição do imóvel, logradouro, número, bairro e município, identificação de lote ou quadra, natureza do terreno (se pertence às forças armadas), características de cômodos, dimensões de tamanho e localização do imóvel, número de matrícula do imóvel, cartório que registrou a matrícula, e Inscrição e/ou sequencial do imóvel na Prefeitura onde está o imóvel. Retorne uma tabela com título 'Dados do Imóvel Matrícula' com essas informações."
+        }
+    },
+    "Comprovante de Residência Comprador": {
+        "v1": "Extraia do documento 'Comprovante de Residência' os dados relacionados a endereço e CEP (Caixa Postal/ZIP Code).",
+        "latest": {
+            "prompt": "You are an assistant for question-answering tasks. Always answer in Portuguese (Brasil). Retrieve information from Context where the token 'NOME_DO_DOCUMENTO' contains 'Comprovante de Residência Comprador'. Always return a structured table consolidating the information in the end of the answer.",
+            "input": "Extraia os dados relacionados a endereço e CEP (Caixa Postal/ZIP Code). Retorne uma tabela com título 'Dados do Comprovante de Residência Comprador' com essas informações."
+        }
+    },
+    "Comprovante de Residência Vendedor": {
+        "v1": "Extraia do documento 'Comprovante de Residência' os dados relacionados a endereço e CEP (Caixa Postal/ZIP Code).",
+        "latest": {
+            "prompt": "You are an assistant for question-answering tasks. Always answer in Portuguese (Brasil). Retrieve information from Context where the token 'NOME_DO_DOCUMENTO' contains 'Comprovante de Residência Vendedor'. Always return a structured table consolidating the information in the end of the answer.",
+            "input": "Extraia os dados relacionados a endereço e CEP (Caixa Postal/ZIP Code). Retorne uma tabela com título 'Dados do Comprovante de Residência Vendedor' com essas informações."
+        }
+    },
+    "Certidão de Casamento Comprador": {
+        "v1": "Extraia do documento 'Certidão de Casamento' os dados relacionados ao Cônjuge: Nome, Documento de Identificação e Data do Casamento. Extrair o dado sobre o tipo de Regime de Bens.",
+        "v2": "Extraia do documento 'Certidão de Casamento' os dados relacionados ao Cônjuge: Nome, Documento de Identificação e Data do Casamento. Extrair o dado sobre o tipo de Regime de Bens e extrair os dados de registro da certidão e onde a certidão foi emitida.",
+        "v3": "Extraia do documento 'Certidão de Casamento' os dados relacionados ao Cônjuge: Nome, Documento de Identificação e Data do Casamento. Extrair o dado sobre o tipo de Regime de Bens. Extrair o número de registro da certidão, onde a certidão foi emitida e a data de emissão da Certidão.",
+        "v4": "Extraia do documento 'Certidão de Casamento' os dados relacionados ao Cônjuge: Nome, Documento de Identificação e Data do Casamento. Extrair o dado sobre o tipo de Regime de Bens. Extrair o número de registro da certidão, onde a certidão foi emitida e a data de emissão da Certidão.",
+        "latest": {
+            "prompt": "You are an assistant for question-answering tasks. Always answer in Portuguese (Brazil). Always return a structured table gathering the information at the end. Retrieve information from Context where the token 'NOME_DO_DOCUMENTO' contains 'Certidão de Casamento Comprador'.",
+            "input": "Extraia dados relacionados ao Cônjuge: Nome, Documento de Identificação e Data do Casamento. Extrair o dado sobre o tipo de Regime de Bens. Extrair o número de registro da certidão, onde a certidão foi emitida e a data de emissão da Certidão. Retorne uma tabela com título 'Dados da Certidão de Casamento Comprador' com essas informações."
+        }
+    },
+    "Certidão de Casamento Vendedor": {
+        "v1": "Extraia do documento 'Certidão de Casamento' os dados relacionados ao Cônjuge: Nome, Documento de Identificação e Data do Casamento. Extrair o dado sobre o tipo de Regime de Bens.",
+        "v2": "Extraia do documento 'Certidão de Casamento' os dados relacionados ao Cônjuge: Nome, Documento de Identificação e Data do Casamento. Extrair o dado sobre o tipo de Regime de Bens e extrair os dados de registro da certidão e onde a certidão foi emitida.",
+        "v3": "Extraia do documento 'Certidão de Casamento' os dados relacionados ao Cônjuge: Nome, Documento de Identificação e Data do Casamento. Extrair o dado sobre o tipo de Regime de Bens. Extrair o número de registro da certidão, onde a certidão foi emitida e a data de emissão da Certidão.",
+        "v4": "Extraia do documento 'Certidão de Casamento' os dados relacionados ao Cônjuge: Nome, Documento de Identificação e Data do Casamento. Extrair o dado sobre o tipo de Regime de Bens. Extrair o número de registro da certidão, onde a certidão foi emitida e a data de emissão da Certidão.",
+        "latest": {
+            "prompt": "You are an assistant for question-answering tasks. Always answer in Portuguese (Brazil). Always return a structured table gathering the information at the end. Retrieve information from Context where the token 'NOME_DO_DOCUMENTO' contains 'Certidão de Casamento Vendedor'.",
+            "input": "Extraia dados relacionados ao Cônjuge: Nome, Documento de Identificação e Data do Casamento. Extrair o dado sobre o tipo de Regime de Bens. Extrair o número de registro da certidão, onde a certidão foi emitida e a data de emissão da Certidão. Retorne uma tabela com título 'Dados da Certidão de Casamento Vendedor' com essas informações."
+        }
+    },
+    "CNH Cônjuge": {
+        "latest": {
+            "prompt": "You are an assistant for question-answering tasks. Always answer in Portuguese (Brasil). Retrieve information from Context where the token 'NOME_DO_DOCUMENTO' contains 'CNH Cônjuge'. Always return a structured table consolidating the information in the end of the answer.",
+            "input": "Extraia os dados nos campos: Nome completo (1º Nome encontrado), nacionalidade (infira, se necessário e não declare ao usuário que foi inferido), data de nascimento, RG com órgão expedidor e CPF (11 dígitos separados por '.' e '-', localizado após o RG) remova '.', '-' e '/' dos valores. Retorne uma tabela com título 'Dados do CNH do Cônjuge' com essas informações."
+        }
+    },
+    "Pacto Antenupcial ou Declaração de União Estável": {
+        "latest": {
+            "prompt": "You are an assistant for question-answering tasks. Always answer in Portuguese (Brasil). Retrieve information from Context where the token 'NOME_DO_DOCUMENTO' contains 'Pacto Antenupcial ou Declaração de União Estável'. Always return a structured table consolidating the information in the end of the answer.",
+            "input": "Extrair os dados sobre o tipo de Regime de Bens, número da Escritura, cartório onde foi lavrada, informações do livro e data. Retorne uma tabela com título 'Dados do Pacto/Declaração' com essas informações."
         }
     }
 }
