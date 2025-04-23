@@ -2,8 +2,11 @@ import streamlit as st
 import logging
 from streamlit.logger import get_logger
 from rag_utils.config import init
-from rag_utils.content_indexing import document_encoder_retriever
-from rag_utils.document_retrieval import build_agent
+# from rag_utils.content_indexing import document_encoder_retriever
+# from rag_utils.qa_document_retrieval import build_agent
+from rag_utils.pipeline import RAG_document_retrieval
+from utils import StreamHandler
+
 
 logging.basicConfig(level = logging.INFO)
 
@@ -34,61 +37,80 @@ if uploaded_file_minuta:
 
     if 'rag_minuta' not in st.session_state:
         st.write("A IA irá coletar as informações presentes no documento...")
-        st.session_state['rag_minuta'] = True
+        st.session_state.rag_minuta = uploaded_file_minuta
 
-        minuta_retriever = document_encoder_retriever(
-            document_name='Minuta', 
-            uploaded_file=uploaded_file_minuta,
-            ocr_params={
-                'pages': [0],
-                'lang': 'por'
-            }, 
-            logger=logger, 
-            embeddings=st.session_state.embeddings,
-            vectorstore_config=st.session_state.vectorstore_config
-        )
-
-        st.session_state.minuta_db = minuta_retriever
-
-        minuta_system = st.session_state.prompts['Minuta Comprador'].get('latest').get('prompt_minuta', None)
-        
-        minuta_agent = build_agent(
-            prompt=minuta_system, 
-            vectorstore=minuta_retriever,
-            logger=logger,
-            history_context="",
-            llm=st.session_state.llm
-        )
-
-        query = st.session_state.prompts['Minuta Comprador'].get('latest')['input_minuta']
-        logger.info(f"{query}")
-        
-        minuta_response = minuta_agent.invoke({'input': query })
-        
-        answer = minuta_response['answer']
+        # Collect and structure data from Buyers 
+        answer = RAG_document_retrieval(
+                    document='Minuta Comprador',
+                    file=st.session_state.rag_minuta,
+                    prompts=st.session_state.prompts,
+                    logger=logger,
+                    embeddings=st.session_state.embeddings,
+                    vectordb_config=st.session_state.vectorstore_config,
+                    llm=st.session_state.llm,
+                    ocr_params={
+                        'pages': [0],
+                        'lang': 'por'
+                    }
+                )
         
         st.session_state.minuta_comprador = answer
 
-        minuta_system_owner = st.session_state.prompts['Minuta Vendedor'].get('latest').get('prompt_minuta', None)
-        
-        minuta_agent_owner = build_agent(
-            prompt=minuta_system_owner, 
-            vectorstore=minuta_retriever,
-            logger=logger,
-            history_context="",
-            llm=st.session_state.llm
-        )
+        # Print output answer
+        stream_handler = StreamHandler(st.empty())
+        for token in st.session_state.minuta_comprador:
+            stream_handler.on_llm_new_token(token=token)
 
-        query_owner = st.session_state.prompts['Minuta Vendedor'].get('latest')['input_minuta']
-        
-        minuta_response_owner = minuta_agent_owner.invoke({'input': query_owner })
-        
-        answer_owner = minuta_response_owner['answer']
-        
-        st.session_state.minuta_vendedor = answer_owner
+        # Collect and structure data from Sellers 
+        answer = RAG_document_retrieval(
+                    document='Minuta Vendedor',
+                    file=st.session_state.rag_minuta,
+                    prompts=st.session_state.prompts,
+                    logger=logger,
+                    embeddings=st.session_state.embeddings,
+                    vectordb_config=st.session_state.vectorstore_config,
+                    llm=st.session_state.llm,
+                    ocr_params={
+                        'pages': [0],
+                        'lang': 'por'
+                    }
+                )
 
-if 'minuta_comprador' in st.session_state:
-    st.write(st.session_state.minuta_comprador)
+        st.session_state.minuta_vendedor = answer
 
-if 'minuta_vendedor' in st.session_state:
-    st.write(st.session_state.minuta_vendedor)
+        # Print output answer
+        stream_handler = StreamHandler(st.empty())
+        for token in st.session_state.minuta_vendedor:
+            stream_handler.on_llm_new_token(token=token)
+
+        # Collect and structure data from Real State/Land
+        answer = RAG_document_retrieval(
+                    document='Minuta Imóvel',
+                    file=st.session_state.rag_minuta,
+                    prompts=st.session_state.prompts,
+                    logger=logger,
+                    embeddings=st.session_state.embeddings,
+                    vectordb_config=st.session_state.vectorstore_config,
+                    llm=st.session_state.llm,
+                    ocr_params={
+                        'pages': [0,1],
+                        'lang': 'por'
+                    }
+                )
+
+        st.session_state.minuta_imovel = answer
+
+        # Print output answer
+        stream_handler = StreamHandler(st.empty())
+        for token in st.session_state.minuta_imovel:
+            stream_handler.on_llm_new_token(token=token)
+
+    else:
+        if 'minuta_comprador' in st.session_state:
+            st.write(st.session_state.minuta_comprador)
+
+        if 'minuta_vendedor' in st.session_state:
+            st.write(st.session_state.minuta_vendedor)
+
+        if 'minuta_imovel' in st.session_state:
+            st.write(st.session_state.minuta_imovel)
