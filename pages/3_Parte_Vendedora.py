@@ -65,7 +65,8 @@ for tab, document in zip(tabs, st.session_state.owner_documents_list):
                 document=document,
                 document_answer=answer,
                 minuta_answer=minuta_answer,
-                llm=st.session_state.llm
+                llm=st.session_state.llm,
+                logger=logger
             )
             st.session_state.final_answer_owner[document] = final_answer
             

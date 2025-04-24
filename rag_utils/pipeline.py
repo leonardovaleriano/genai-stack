@@ -2,13 +2,15 @@ from rag_utils.content_indexing import document_encoder_retriever
 from rag_utils.qa_document_retrieval import build_agent
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
+from langchain_community.callbacks import get_openai_callback
+import logging
 
 
 def RAG_document_retrieval(
     document, 
     file,
     prompts, 
-    logger, 
+    logger: logging.Logger, 
     embeddings, 
     vectordb_config,
     llm,
@@ -35,12 +37,19 @@ def RAG_document_retrieval(
 
     # QA RAG document retrieval
     query = prompts[document].get('latest')['input']
-    answer = agent.invoke({'input': query})['answer']
+
+    with get_openai_callback() as cb:
+        answer = agent.invoke({'input': query})['answer']
+
+    logger.info(f"Total Tokens: {cb.total_tokens}")
+    logger.info(f"Prompt Tokens: {cb.prompt_tokens}")
+    logger.info(f"Completion Tokens: {cb.completion_tokens}")
+    logger.info(f"Total Cost (USD): ${cb.total_cost}")
     
     return answer
 
 
-def RAG_document_validator(document, document_answer, minuta_answer, llm):
+def RAG_document_validator(document, document_answer, minuta_answer, llm, logger: logging.Logger):
     
     # Build context aggregating information from document and Minuta
     context = f"Tabela {document} " + \
@@ -67,5 +76,12 @@ def RAG_document_validator(document, document_answer, minuta_answer, llm):
     chain = prompt | llm | StrOutputParser()
     
     # QA RAG document validation
-    answer = chain.invoke(f"Compare apenas os dados do {document} os quais também estejam presentes na Minuta.")
+    with get_openai_callback() as cb:
+        answer = chain.invoke(f"Compare apenas os dados do {document} os quais também estejam presentes na Minuta.")
+        
+    logger.info(f"Total Tokens: {cb.total_tokens}")
+    logger.info(f"Prompt Tokens: {cb.prompt_tokens}")
+    logger.info(f"Completion Tokens: {cb.completion_tokens}")
+    logger.info(f"Total Cost (USD): ${cb.total_cost}")
+
     return answer

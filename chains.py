@@ -65,7 +65,7 @@ def load_embedding_model(embedding_model_name: str, logger=BaseLogger(), config=
 def load_llm(llm_name: str, logger=BaseLogger(), config={}):
     if llm_name.startswith("gpt"):
         logger.info(f"LLM: Using OPENAI: {llm_name}")
-        return ChatOpenAI(temperature=0, model_name=llm_name, streaming=True)
+        return ChatOpenAI(temperature=0, model_name=llm_name)
     elif llm_name == "claudev2":
         logger.info("LLM: ClaudeV2")
         return ChatBedrock(

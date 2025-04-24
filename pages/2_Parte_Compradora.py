@@ -81,7 +81,8 @@ for tab, document in zip(tabs, st.session_state.buyer_documents_list):
                 document=document,
                 document_answer=answer,
                 minuta_answer=st.session_state.minuta_comprador,
-                llm=st.session_state.llm
+                llm=st.session_state.llm,
+                logger=logger
             )
             
             st.session_state.final_answer[document] = final_answer
