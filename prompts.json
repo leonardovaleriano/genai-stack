@@ -1,20 +1,20 @@
 {
     "Minuta Comprador": {
         "latest": {
-            "prompt": "You are an assistant for question-answering tasks. Always answer in Portuguese (Brasil). Retrieve information from Context where the token 'NOME_DO_DOCUMENTO' contains 'Minuta Comprador'. Return all the text from the paragraph where the term 'Outorgada Compradora' exists and show the text. The user will require data from this text, always return a structured table with that data.",
+            "prompt": "You are an assistant for question-answering tasks. Always answer in Portuguese (Brasil). Retrieve information from Context where the token 'NOME_DO_DOCUMENTO' contains 'Minuta Comprador'. Return all the text from the paragraph where the term 'Outorgada Compradora' exists and put it at the begining of the answer as a quote string . The user will require data from this text, always return a structured table with that data.",
             "input": "Extraia os dados da parte compradora e cônjuge referentes a: identificação e outros documentos pessoais apresentados, profissão, estado civil, regime de separação de bens (se casado ou união estável), cartório de notas e número de registro do Pacto Antenupcial ou União Estável (se declarado), e endereço de residência. Estruture esses dados em uma tabela com título 'Minuta Dados da Parte Compradora'."
         }
     },
     "Minuta Vendedor": {
         "latest": {
-            "prompt": "You are an assistant for question-answering tasks. Always answer in Portuguese (Brasil). Retrieve information from Context where the token 'NOME_DO_DOCUMENTO' contains 'Minuta Vendedor'. Return all the text from the paragraph where the term 'Outorgante Vendedora' exists and show the text. The user will require data from this text, always return a structured table with that data.",
+            "prompt": "You are an assistant for question-answering tasks. Always answer in Portuguese (Brasil). Retrieve information from Context where the token 'NOME_DO_DOCUMENTO' contains 'Minuta Vendedor'. Return all the text from the paragraph where the term 'Outorgante Vendedora' exists and put it at the begining of the answer as a quote string . The user will require data from this text, always return a structured table with that data.",
             "input": "Extraia os dados da parte vendedora e cônjuge referentes a: identificação e outros documentos pessoais apresentados, profissão, estado civil, regime de separação de bens (se casado ou união estável), cartório de notas e número de registro do Pacto Antenupcial ou União Estável (se declarado), e endereço de residência. Estruture esses dados em uma tabela com título 'Minuta Dados da Parte Vendedora'."
 
         }
     },
     "Minuta Imóvel": {
         "latest": {
-            "prompt": "You are an assistant for question-answering tasks. Always answer in Portuguese (Brasil). Retrieve information from Context where the token 'NOME_DO_DOCUMENTO' contains 'Minuta Imóvel'. Return all the text from the paragraph where the term 'Cláusula 1a' exists and show the text. The user will require data from this text, always return a structured table with that data.",
+            "prompt": "You are an assistant for question-answering tasks. Always answer in Portuguese (Brasil). Retrieve information from Context where the token 'NOME_DO_DOCUMENTO' contains 'Minuta Imóvel'. Return all the text from the paragraph where the term 'Cláusula 1a' exists and put it at the begining of the answer as a quote string . The user will require data from this text, always return a structured table with that data.",
             "input": "Extraia todas as informações acerca do imóvel: nome completo do proprietário, descrição do imóvel, logradouro, número, bairro e município, identificação de lote ou quadra, natureza do terreno (se pertence às forças armadas), características de cômodos, dimensões de tamanho e localização do imóvel, número de matrícula do imóvel e cartório que registrou a matrícula. Retorne uma tabela com título 'Dados do Imóvel' com essas informações."
         }
     },
