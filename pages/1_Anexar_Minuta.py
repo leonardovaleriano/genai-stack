@@ -2,8 +2,6 @@ import streamlit as st
 import logging
 from streamlit.logger import get_logger
 from rag_utils.config import init
-# from rag_utils.content_indexing import document_encoder_retriever
-# from rag_utils.qa_document_retrieval import build_agent
 from rag_utils.pipeline import RAG_document_retrieval
 from utils import StreamHandler
 
@@ -79,9 +77,9 @@ if uploaded_file_minuta:
         st.session_state.minuta_vendedor = answer
 
         # Print output answer
-        stream_handler = StreamHandler(st.empty())
+        stream_handler2 = StreamHandler(st.empty())
         for token in st.session_state.minuta_vendedor:
-            stream_handler.on_llm_new_token(token=token)
+            stream_handler2.on_llm_new_token(token=token)
 
         # Collect and structure data from Real State/Land
         answer = RAG_document_retrieval(
@@ -101,16 +99,16 @@ if uploaded_file_minuta:
         st.session_state.minuta_imovel = answer
 
         # Print output answer
-        stream_handler = StreamHandler(st.empty())
+        stream_handler3 = StreamHandler(st.empty())
         for token in st.session_state.minuta_imovel:
-            stream_handler.on_llm_new_token(token=token)
+            stream_handler3.on_llm_new_token(token=token)
 
-    else:
-        if 'minuta_comprador' in st.session_state:
-            st.write(st.session_state.minuta_comprador)
+else:
+    if 'minuta_comprador' in st.session_state:
+        st.write(st.session_state.minuta_comprador)
 
-        if 'minuta_vendedor' in st.session_state:
-            st.write(st.session_state.minuta_vendedor)
+    if 'minuta_vendedor' in st.session_state:
+        st.write(st.session_state.minuta_vendedor)
 
-        if 'minuta_imovel' in st.session_state:
-            st.write(st.session_state.minuta_imovel)
+    if 'minuta_imovel' in st.session_state:
+        st.write(st.session_state.minuta_imovel)
