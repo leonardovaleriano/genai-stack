@@ -47,6 +47,3 @@ def init():
         logger=logger, 
         config={"ollama_base_url": ollama_base_url}
     )
-
-    st.session_state.documents_list = ['CNH', 'Comprovante de Residência', 'Certidão de Casamento']
-    st.session_state.documents = []
