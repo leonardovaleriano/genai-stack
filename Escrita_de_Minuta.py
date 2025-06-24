@@ -1,7 +1,6 @@
 import streamlit as st
 from rag_utils.config import init
 from rag_utils.pipeline import RAG_document_retrieval
-import base64
 import threading
 import logging
 import time
@@ -9,39 +8,69 @@ import time
 
 session_state_status_percent = 0
 
+logging.basicConfig(level = logging.INFO)
+logger = logging.getLogger(__name__)
 
-def parte_compradora_agents_thread(uploaded_files):
+
+def write_text_agents_thread(uploaded_files, docs, prompts, embeddings, vectorstore_config, llm):
     global session_state_status_percent
 
     if uploaded_files:
-        st.session_state.status = "Processando documentos da parte compradora..."
-        logging.info("Parte compradora: Iniciando o processamento dos documentos.")
+        st.session_state.status = "Processando documentos anexados..."
+        logging.info("Iniciando o processamento dos documentos.")
         
         session_state_status_percent = 0
         len_uploaded_files = len(uploaded_files)
         
         # Simulate processing each uploaded file
         for p, uploaded_file in enumerate(uploaded_files):
-            # Simulate processing time
-            time.sleep(1)
             st.session_state.status = f"Processando {uploaded_file.name}..."
             session_state_status_percent = (p+1) / len_uploaded_files
-            logging.info(f"Parte compradora: Processando {uploaded_file.name}...")
-            logging.info(f"Parte compradora (Thread): Progresso {session_state_status_percent:.2%}")
+            logging.info(f"Processando {uploaded_file.name}...")
+            logging.info(f"(Thread): Progresso {session_state_status_percent:.2%}")
 
-            # Here you would typically call your RAG_document_retrieval function
-            # For example: RAG_document_retrieval(uploaded_file)
-        
-        st.session_state.status = "Documentos da parte compradora processados com sucesso!"
-        logging.info("Parte compradora: Documentos processados com sucesso!")
+            # Find the prompts for the current document
+            for doc in docs:
+                first_name = doc.split()[0].lower()
+                if first_name in uploaded_file.name.lower():
+                    logging.info(f"Prompts encontrados para {doc}: {prompts[doc].get('latest')['prompt']}")
+                    break
+
+            # Collect and structure data from Buyers 
+            answer = RAG_document_retrieval(
+                document=doc,
+                file=uploaded_file,
+                prompts=prompts,
+                logger=logger,
+                embeddings=embeddings,
+                vectordb_config=vectorstore_config,
+                llm=llm,
+                ocr_params={
+                    'pages': None,
+                    'lang': 'por'
+                }
+            )
+
+            logging.info(f"Resposta do RAG: {answer}")
+
+        st.session_state.status = "Documentos processados com sucesso!"
+        logging.info("Documentos processados com sucesso!")
 
 
-def parte_compradora_button_callback(uploaded_files, container):
+def write_paragraph_button_callback(uploaded_files, container, documents_list=None):
     global session_state_status_percent
     
+    logger.info(f"write_paragraph_button_callback Prompts loaded: {st.session_state.prompts.keys()}")
     thread = threading.Thread(
-        target=parte_compradora_agents_thread,
-        args=(uploaded_files,),
+        target=write_text_agents_thread,
+        args=(
+            uploaded_files, 
+            documents_list,
+            st.session_state.prompts, 
+            st.session_state.embeddings, 
+            st.session_state.vectorstore_config, 
+            st.session_state.llm
+        ),
         daemon=True
     )
     thread.start()
@@ -49,7 +78,7 @@ def parte_compradora_button_callback(uploaded_files, container):
     with container:
         bar = st.progress(0, text_ocr)
         while session_state_status_percent*100 < 100:
-            time.sleep(0.1)
+            time.sleep(0.5)
             bar.progress(session_state_status_percent, text_ocr)
             logging.info(f"Parte compradora: Progresso {session_state_status_percent:.2%}")
         bar.empty()
@@ -60,15 +89,8 @@ def parte_compradora_button_callback(uploaded_files, container):
     logging.info("Parte compradora: Processamento finalizado!")
 
 
-def parte_vendedora_button_callback():
-    pass
-
-
-def imovel_button_callback():
-    pass
-
-
-def container_files_uploader_and_text_writer(container, labels: dict, key, callback):
+def build_container_files_uploader_and_text_writer(container, labels: dict, key, callback, documents_list=None):
+    
     container.markdown(f"**{labels['markdown_label']}**")
     
     uploaded_files = container.file_uploader(
@@ -83,23 +105,20 @@ def container_files_uploader_and_text_writer(container, labels: dict, key, callb
         help="Clique para gerar o parágrafo com as informações extraídas dos documentos.",
         disabled=not uploaded_files,
         on_click=callback,
-        args=(uploaded_files, container),
+        args=(uploaded_files, container, documents_list),
         key=f"{key}_button"
     )
     
     if uploaded_files and write_text_button:
         container.write(f"Status: {st.session_state.status}")
 
-logging.basicConfig(level = logging.INFO)
 
-if 'init' not in st.session_state:
-    st.session_state.init = True
+if 'init_escrita_de_minuta_page' not in st.session_state:
+    st.session_state.init_escrita_de_minuta_page = True
     if 'status' not in st.session_state:
         st.session_state.status = "Aguardando o upload dos documentos..."
+    
     init()
-
-if 'init_writer_page' not in st.session_state:
-    st.session_state.init_buyer_writer_page = True
 
     st.session_state.buyer_documents_list = [
         'CNH Comprador', 
@@ -111,9 +130,13 @@ if 'init_writer_page' not in st.session_state:
     ]
     
     st.session_state.owner_documents_list = [
+        'CNPJ Vendedor',
         'CNH Vendedor',
-        'Comprovante de Residência Vendedor',
-        'Matrícula do Imóvel'
+        'Comprovante de Residência Vendedor'
+    ]
+
+    st.session_state.propery_documents_list = [
+        'Matrícula do Imóvel',
     ]
 
 text_ocr = "Extraindo informações dos documentos..."
@@ -127,7 +150,7 @@ st.write(
 
 parte_compradora = st.container()
 
-container_files_uploader_and_text_writer(
+build_container_files_uploader_and_text_writer(
     container=parte_compradora,
     labels={
         'markdown_label': '**Parte Compradora**',
@@ -136,14 +159,15 @@ container_files_uploader_and_text_writer(
         'progress_text': text_ocr
     },
     key='parte_compradora',
-    callback=parte_compradora_button_callback
+    callback=write_paragraph_button_callback,
+    documents_list=st.session_state.buyer_documents_list
 )
 
 st.divider()
 
 parte_vendedora = st.container()
 
-container_files_uploader_and_text_writer(
+build_container_files_uploader_and_text_writer(
     container=parte_vendedora,
     labels={
         'markdown_label': '**Parte Vendedora**',
@@ -152,14 +176,15 @@ container_files_uploader_and_text_writer(
         'progress_text': text_ocr
     },
     key='parte_vendedora',
-    callback=parte_vendedora_button_callback
+    callback=write_paragraph_button_callback,
+    documents_list=st.session_state.owner_documents_list
 )
 
 st.divider()
 
 imovel = st.container()
 
-container_files_uploader_and_text_writer(
+build_container_files_uploader_and_text_writer(
     container=imovel,
     labels={
         'markdown_label': '**Escritura do Imóvel**',
@@ -168,5 +193,6 @@ container_files_uploader_and_text_writer(
         'progress_text': text_ocr
     },
     key='imovel',
-    callback=imovel_button_callback
+    callback=write_paragraph_button_callback,
+    documents_list=st.session_state.propery_documents_list
 )

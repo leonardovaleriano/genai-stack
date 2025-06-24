@@ -41,10 +41,10 @@ def RAG_document_retrieval(
     with get_openai_callback() as cb:
         answer = agent.invoke({'input': query})['answer']
 
-    logger.info(f"Total Tokens: {cb.total_tokens}")
-    logger.info(f"Prompt Tokens: {cb.prompt_tokens}")
-    logger.info(f"Completion Tokens: {cb.completion_tokens}")
-    logger.info(f"Total Cost (USD): ${cb.total_cost}")
+        logger.info(f"Total Tokens: {cb.total_tokens}")
+        logger.info(f"Prompt Tokens: {cb.prompt_tokens}")
+        logger.info(f"Completion Tokens: {cb.completion_tokens}")
+        logger.info(f"Total Cost (USD): ${cb.total_cost}")
     
     return answer
 
@@ -79,9 +79,9 @@ def RAG_document_validator(document, document_answer, minuta_answer, llm, logger
     with get_openai_callback() as cb:
         answer = chain.invoke(f"Compare apenas os dados do {document} os quais também estejam presentes na Minuta.")
         
-    logger.info(f"Total Tokens: {cb.total_tokens}")
-    logger.info(f"Prompt Tokens: {cb.prompt_tokens}")
-    logger.info(f"Completion Tokens: {cb.completion_tokens}")
-    logger.info(f"Total Cost (USD): ${cb.total_cost}")
+        logger.info(f"Total Tokens: {cb.total_tokens}")
+        logger.info(f"Prompt Tokens: {cb.prompt_tokens}")
+        logger.info(f"Completion Tokens: {cb.completion_tokens}")
+        logger.info(f"Total Cost (USD): ${cb.total_cost}")
 
     return answer
